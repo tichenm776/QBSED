@@ -1,0 +1,16 @@
+<logging>
+    <filter enabled="false">
+        <tag>stdout</tag>
+        <type>console</type>
+        <level>DEBUG</level>
+    </filter>
+    <filter enabled="true">
+        <tag>file</tag>
+        <type>file</type>
+        <level>DEBUG</level>
+        <property name="filename">/home/classin_qidi/logs/log4classin.log</property>
+        <property name="rotate">true</property> <!-- true enables log rotation, otherwise append -->  
+    	<property name="maxsize">100M</property> <!-- \d+[KMG]? Suffixes are in terms of 2**10 -->  
+        <property name="daily">true</property>
+    </filter>
+</logging>

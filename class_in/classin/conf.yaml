@@ -1,0 +1,16 @@
+dorm_server_port: 5000
+school_server_port: 5001
+account_server_port: 5002
+koala_host: 192.168.18.210
+koala_port: 80
+koala_core_port: 8080
+db_username: root
+db_password: root
+db_ip: localhost
+db_port: 3306
+db_name: hotel
+koala_apis_host: http://192.168.18.207:5001
+koala_username: admin@91zo.com
+koala_password: admin123
+email: alucard137485@163.com
+email_password: 1qwerty
