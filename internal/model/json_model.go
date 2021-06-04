@@ -1,5 +1,25 @@
 package model
 
+
+
+
+type User_json struct {
+	Name				string `gorm:"column:name" json:"name"`
+	Phone				string `gorm:"not null" json:"phone"`
+	Password 			string `gorm:"not null" json:"password "`
+	Password_check 			string `gorm:"not null" json:"password_check "`
+}
+
+
+
+
+
+
+
+
+
+
+
 type Room_json struct {
 	Room_name string	`json:"room_name"`
 	Principal string	`json:"principal"`

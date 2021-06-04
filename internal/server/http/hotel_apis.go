@@ -123,131 +123,36 @@ func Logout(c *gin.Context){
 func Register(c *gin.Context) {
 	var (
 		resp4Device    model.Resp4Device
-		EmployeeRecords model.User
-		//data           interface{}
+		User model.User_json
 	)
-	//subject_id_string := c.Query("subject_id")
-	//if subject_id_string != ""{
-	//	subject_id,_ := strconv.Atoi(subject_id_string)
-	//}
+
 	resp4Device.Code = 0
 	resp4Device.Err_msg = ""
-	err := c.BindJSON(&EmployeeRecords)
-
-	if EmployeeRecords.Page == 0 {
-		EmployeeRecords.Page = 1
-	}
-	if EmployeeRecords.Size == 0 {
-		EmployeeRecords.Size = 10
-	}
+	err := c.Bind(&User)
 	if err != nil {
-		//resp4Device.Code = -100
-		//EmployeeRecords.Snap_position = ""
-		EmployeeRecords.Subject_id = 0
-		EmployeeRecords.Screen_id= 0
-		EmployeeRecords.User_role = -1
-		EmployeeRecords.Name= ""
-		EmployeeRecords.Snap_begin_time= ""
-		EmployeeRecords.Snap_end_time= ""
+		resp4Device.Code = -100
+		resp4Device.Err_msg = err.Error()
 	}
-	EmployeeRecords.Snap_begin_time = svc.UTCchange(EmployeeRecords.Snap_begin_time)
-	EmployeeRecords.Snap_end_time = svc.UTCchange(EmployeeRecords.Snap_end_time)
+	if User.Password != User.Password_check{
+		resp4Device.Code = -100
+		resp4Device.Err_msg = "两次密码不一致"
+	}
 	if resp4Device.Code != 0 {
 		zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
 		return
 	}
-	if Position_map[-99] == nil{
-		GetPositionMap()
-	}
-	Position_map_copy := Position_map
-	if EmployeeRecords.Subject_id != 0{
-		if (EmployeeRecords.Snap_begin_time != "" && EmployeeRecords.Snap_end_time != "") && EmployeeRecords.Snap_begin_time[0:10] == EmployeeRecords.Snap_end_time[0:10]{
-			res, err, count, total := svc.GetIdentificationRecords(EmployeeRecords,Position_map_copy)
-			if err != nil {
-				resp4Device.Code = -100
-				resp4Device.Err_msg = "查询记录失败"
-				resp4Device.Data = res
-			}
-			if resp4Device.Code != 0 {
-				zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
-				return
-			}
-			resp4Device.Data = res
-			c.JSON(http.StatusOK, gin.H{
-				"code":    resp4Device.Code,
-				"err_msg": resp4Device.Err_msg,
-				"data":    resp4Device.Data,
-				"count":   count,
-				"current": EmployeeRecords.Page,
-				"size":    EmployeeRecords.Size,
-				"total":   total,
-			})
-			return
-		}else{
-			datelist := svc.GetBetweenDates(EmployeeRecords.Snap_begin_time,EmployeeRecords.Snap_end_time)
-			time1 := EmployeeRecords.Snap_begin_time[11:]
-			time2 := EmployeeRecords.Snap_end_time[11:]
-			temptotal:=0
-			tempcount:=0
-			tempdata := make([]model.IdentificationRecord,0)
-			for _,v := range datelist{
-				EmployeeRecords.Snap_begin_time = v+" "+time1
-				EmployeeRecords.Snap_end_time = v+" "+time2
-				res, err, count, total := svc.GetIdentificationRecords(EmployeeRecords,Position_map_copy)
-				if err != nil{
-					log4go.Info(err)
-					log4go.Info("查询为空")
-					resp4Device.Code = -100
-					resp4Device.Err_msg = "查询记录失败"
-					resp4Device.Data = res
-				}
-				if resp4Device.Code != 0 {
-					zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
-					return
-				}
-				temptotal += total
-				tempcount += count
-				tempdata = append(tempdata,res... )
-			}
-			resp4Device.Data = tempdata
-			total := zyutil.GetTotal(tempcount, EmployeeRecords.Size)
-			c.JSON(http.StatusOK, gin.H{
-				"code":    resp4Device.Code,
-				"err_msg": resp4Device.Err_msg,
-				"data":    resp4Device.Data,
-				"count":   tempcount,
-				"current": EmployeeRecords.Page,
-				"size":    EmployeeRecords.Size,
-				"total":   total,
-			})
-			return
-		}
-	}else{
-		res, err, count, total := svc.GetIdentificationRecords(EmployeeRecords,Position_map_copy)
 
-		if err != nil {
-			resp4Device.Code = -100
-			resp4Device.Err_msg = "查询记录失败"
-			resp4Device.Data = res
-		}
-		if resp4Device.Code != 0 {
-			zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
-			return
-		}
+	//注册
 
-		resp4Device.Data = res
+	svc.UpdateCourse()
 
-		c.JSON(http.StatusOK, gin.H{
-			"code":    resp4Device.Code,
-			"err_msg": resp4Device.Err_msg,
-			"data":    resp4Device.Data,
-			"count":   count,
-			"current": EmployeeRecords.Page,
-			"size":    EmployeeRecords.Size,
-			"total":   total,
-		})
-		return
-	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    resp4Device.Code,
+		"err_msg": resp4Device.Err_msg,
+		"data":    resp4Device.Data,
+	})
+	return
+
 
 }
 

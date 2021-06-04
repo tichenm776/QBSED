@@ -2,6 +2,8 @@ package service
 
 import (
 	"github.com/alecthomas/log4go"
+	"strings"
+	"time"
 	"zhiyuan/QBSED/internal/model"
 )
 
@@ -89,6 +91,32 @@ func(s *Service)GetCoursesbyid(id string)(result model.Course,err error){
 	result,err = s.dao.GetCoursebyid()
 	if err != nil{
 		log4go.Error("update Course to local db err:",err)
+		return result,err
+	}
+	return result,nil
+}
+
+func(s *Service)Register(userinfo model.User_json)(result model.User,err error){
+
+	user := model.User{
+		Name:userinfo.Name,
+		Password:userinfo.Password,
+		Phone:userinfo.Phone,
+		Created_at:time.Now().Unix(),
+		Role:1,
+	}
+	err = s.dao.CheckUser(user)
+	if err != nil{
+		if strings.Contains(string(err.Error()), "record not found") {
+			log4go.Info("无重复记录")
+		}else{
+			log4go.Error("检查出错:",err.Error())
+			return result, err
+		}
+	}
+	err = s.dao.AddUser(user)
+	if err != nil{
+		log4go.Error("注册用户失败:",err)
 		return result,err
 	}
 	return result,nil

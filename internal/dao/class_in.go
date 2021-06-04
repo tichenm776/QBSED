@@ -135,3 +135,21 @@ func(d *Dao) DeleteCourse(statistic_obj model.Course)(err error){
 	//total = zyutil.GetTotal(count, Records.Size)
 	return  nil
 }
+
+
+func(d *Dao) AddUser(record model.User)(err error){
+
+	if err := d.crmdb.Debug().Create(&record).Error; err != nil {
+		log4go.Error(err.Error())
+		return errors.New("新增课程失败!")
+	}
+	return nil
+}
+func(d *Dao) CheckUser(record model.User)(err error){
+
+	if err := d.crmdb.Debug().Where("phone = ?",record.Phone).Last(&record).Error; err != nil {
+		log4go.Error(err.Error())
+		return err
+	}
+	return nil
+}
