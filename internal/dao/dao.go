@@ -158,11 +158,11 @@ func New(c *configs.Config)*Dao {
 	var d = &Dao{
 		c:c,
 	}
-	//config.Gconf.DBUsername = "root"
-	//config.Gconf.DBPassword = "root"
-	//config.Gconf.DBIP = "127.0.0.1"
-	//config.Gconf.DBPort = 3306
-	//config.Gconf.DBName = "dining"
+	config.Gconf.DBUsername = "root"
+	config.Gconf.DBPassword = "root"
+	config.Gconf.DBIP = "hz91zo.oicp.vip"
+	config.Gconf.DBPort = 9980
+	config.Gconf.DBName = "dining"
 	crmdb, err := gorm.Open("mysql", config.Gconf.DBUsername + ":" + config.Gconf.DBPassword+
 		"@tcp("+ config.Gconf.DBIP+ ":"+ strconv.Itoa(config.Gconf.DBPort)+ ")/"+ config.Gconf.DBName+ "?parseTime=true&charset=utf8")
 	if crmdb == nil {

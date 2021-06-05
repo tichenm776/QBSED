@@ -8,7 +8,7 @@
         <tag>file</tag>
         <type>file</type>
         <level>DEBUG</level>
-        <property name="filename">/home/zybox/logs/statistic.log</property>
+        <property name="filename">F:/program/code/go/go_project/src/zhiyuan/QBSED/logs/statistic.log</property>
         <property name="rotate">true</property> <!-- true enables log rotation, otherwise append -->  
     	<property name="maxsize">100M</property> <!-- \d+[KMG]? Suffixes are in terms of 2**10 -->  
         <property name="daily">true</property>

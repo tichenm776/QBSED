@@ -144,7 +144,7 @@ func Register(c *gin.Context) {
 
 	//注册
 
-	svc.UpdateCourse()
+	//svc.UpdateCourse()
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    resp4Device.Code,
@@ -155,6 +155,45 @@ func Register(c *gin.Context) {
 
 
 }
+
+
+func GetSignUrl(c *gin.Context) {
+	var (
+		resp4Device    model.Resp4Device
+	)
+
+	resp4Device.Code = 0
+	resp4Device.Err_msg = ""
+	file_path := c.Query("file_path")
+	if file_path == ""{
+		resp4Device.Err_msg = "文件路径不能为空"
+		resp4Device.Code = - 101
+	}
+	if resp4Device.Code != 0 {
+		zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
+		return
+	}
+
+	//注册
+	signinfo,err := svc.GetSignUrl(file_path)
+	//svc.UpdateCourse()
+	if err != nil{
+		resp4Device.Code = -100
+		resp4Device.Err_msg = err.Error()
+		zyutil.DeviceErrorReturn(c, resp4Device.Code, resp4Device.Err_msg)
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"code":    resp4Device.Code,
+		"err_msg": resp4Device.Err_msg,
+		"data":    signinfo,
+	})
+	return
+
+
+}
+
+
 
 func Employeerecords_days(c *gin.Context) {
 	var (

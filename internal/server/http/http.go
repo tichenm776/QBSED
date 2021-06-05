@@ -44,8 +44,8 @@ func New() {
 			configs.Init("./conf.yaml")
 		}
 	} else if runtime.GOOS == "windows" {
-		cpath = "F:/program/code/go/go_project/src/zhiyuan/device_server/raying_api/configs/http.toml"
-		configs.Init("./conf.yaml")
+		cpath = "F:/program/code/go/go_project/src/zhiyuan/QBSED/configs/http.toml"
+		configs.Init("F:/program/code/go/go_project/src/zhiyuan/QBSED/conf.yaml")
 	}
 
 	if _, err := toml.DecodeFile(cpath, &hc); err != nil {
@@ -171,6 +171,8 @@ func initRouter(e *gin.Engine) {
 		authority.POST("/login", LoginIn)
 		authority.POST("/logout", Logout)
 		authority.POST("/register", Register)
+		authority.GET("/signurl", GetSignUrl)
+
 	}
 
 	bedroom := e.Group("/v1")
@@ -202,7 +204,7 @@ func initRouter(e *gin.Engine) {
 		//subject.GET("/koala_departments", GetDepartment)
 		//subject.GET("/subjects", GetSubjectByCategory)
 		subject.GET("/event/constants", Eventconstants)
-		subject.POST("/employee/records", Employeerecords)
+		//subject.POST("/employee/records", Employeerecords)
 		//subject.POST("/employee/records_count", Employeerecords_days)
 		subject.POST("/employee_group/records", EmployeerecordsGroup)
 		subject.POST("/stranger/records", Strangerrecords)

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 	"zhiyuan/QBSED/internal/model"
+	"zhiyuan/QBSED/internal/oss_server"
 )
 
 func(s *Service)GetStudentsFromDb()(members []model.Member,err error){
@@ -75,6 +76,15 @@ func(s *Service)UpdateCourse(record model.Course)(err error){
 		return err
 	}
 	return nil
+}
+func(s *Service)GetSignUrl(filepath string)(result map[string]string,err error){
+
+	result,err = oss_server.GetSignUrl(filepath)
+	if err != nil{
+		log4go.Error("oss get sign url err:",err)
+		return result,err
+	}
+	return result,nil
 }
 
 func(s *Service)GetCourses()(result []model.Course,err error){
